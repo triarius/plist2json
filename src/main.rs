@@ -1,4 +1,4 @@
-mod convert;
+mod json;
 
 use clap::Parser;
 use color_eyre::eyre::{Result, WrapErr};
@@ -20,7 +20,7 @@ fn main() -> Result<()> {
         .wrap_err_with(|| format!("failed to open file: {}", args.filename))?;
     let buffered_reader = BufReader::new(file);
     let value = plist::from_reader(buffered_reader)?;
-    let json = convert::convert(&value)?;
+    let json = json::convert(&value)?;
     println!("{json}");
 
     Ok(())
