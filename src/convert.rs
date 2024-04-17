@@ -1,5 +1,5 @@
 use base64::prelude::*;
-use color_eyre::eyre::{OptionExt, Result};
+use color_eyre::eyre::{eyre, OptionExt, Result};
 use serde_json::Number;
 
 pub(crate) fn convert(input: &plist::Value) -> Result<serde_json::Value> {
@@ -28,7 +28,8 @@ pub(crate) fn convert(input: &plist::Value) -> Result<serde_json::Value> {
         )?,
         plist::Value::String(s) => serde_json::Value::String(s.to_owned()),
         plist::Value::Uid(u) => to_number(u.get())?,
-        _ => todo!(),
+        // Upstream marks the Value enum as non-exhastive so we have to have this
+        _ => Err(eyre!("Unhandled plist type."))?,
     };
 
     Ok(v)
